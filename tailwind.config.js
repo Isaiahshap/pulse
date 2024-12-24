@@ -13,22 +13,22 @@ module.exports = {
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
-        display: ['Oswald', 'sans-serif'],
-        athletic: ['Teko', 'sans-serif'],
+        display: ['Bebas Neue', 'sans-serif'],
+        athletic: ['Oswald', 'sans-serif'],
       },
       animation: {
         'float': 'float 8s ease-in-out infinite',
-        'float-delay': 'float 8s ease-in-out infinite 2s',
         'slide-up': 'slideUp 0.8s ease-out',
         'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'text-flicker': 'textFlicker 3s linear infinite',
         'gradient': 'gradient 3s ease infinite',
         'fade-in': 'fadeIn 1s ease-out',
+        'scale': 'scale 0.3s ease-in-out',
       },
       keyframes: {
         float: {
-          '0%, 100%': { transform: 'translateY(0) rotate(45deg)' },
-          '50%': { transform: 'translateY(-20px) rotate(45deg)' },
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-20px)' },
         },
         slideUp: {
           '0%': { transform: 'translateY(20px)', opacity: '0' },
@@ -45,6 +45,10 @@ module.exports = {
         fadeIn: {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
+        },
+        scale: {
+          '0%': { transform: 'scale(0.95)', opacity: '0' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
         },
       },
       backgroundImage: {

@@ -61,21 +61,21 @@ const Hero: React.FC = () => {
         </div>
       </div>
 
-      <div className="relative z-10 container mx-auto px-4">
-        <div className="max-w-3xl">
+      <div className="relative z-10 container mx-auto px-4 pt-32 pb-16">
+        <div className="max-w-3xl space-y-0">
           <div className="overflow-hidden">
-            <h1 className="text-[140px] leading-none font-display uppercase text-white mb-4 animate-slide-up">
+            <h1 className="text-[140px] leading-tight font-display uppercase text-white animate-slide-up">
               Push Your
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-orangePulse to-yellow-500">
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-orangePulse to-yellow-500 mt-[-0.1em]">
                 Limits
               </span>
             </h1>
           </div>
-          <p className="font-athletic text-3xl text-greyPulse mb-12 max-w-2xl animate-fade-in opacity-90 leading-relaxed tracking-wide">
+          <p className="font-athletic text-2xl text-greyPulse max-w-2xl animate-fade-in opacity-90 leading-relaxed tracking-normal">
             Experience luxury fitness with cutting-edge equipment and elite personal training. 
             Your journey to excellence begins here.
           </p>
-          <div className="flex gap-6">
+          <div className="flex gap-6 pt-4">
             <Link
               to="/membership"
               className="group relative px-12 py-4 overflow-hidden"

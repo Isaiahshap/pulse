@@ -35,3 +35,16 @@ html {
   color: transparent;
   -webkit-text-fill-color: transparent;
 }
+
+/* Add this to your existing CSS */
+.clip-path-sharp {
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% 100%,
+    95% 100%,
+    95% 85%,
+    5% 85%,
+    5% 100%,
+  );
+}

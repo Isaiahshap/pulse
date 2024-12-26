@@ -102,69 +102,6 @@ const CLASS_TYPES: ClassType[] = [
   }
 ]
 
-const CATEGORY_DATA = [
-  { 
-    name: 'All Classes', 
-    count: '24',
-    tooltip: 'HIIT Training, Yoga Flow, Boxing, CrossFit Elite, and more'
-  },
-  { 
-    name: 'Strength', 
-    count: '8',
-    tooltip: 'Strength & Power, Beast Mode, PowerLifting, Olympic Lifting'
-  },
-  { 
-    name: 'HIIT', 
-    count: '6',
-    tooltip: 'HIIT Training, Tabata, Circuit Training, MetCon'
-  },
-  { 
-    name: 'Mind & Body', 
-    count: '5',
-    tooltip: 'Yoga Flow, Power Pilates, Meditation, Stretching'
-  },
-  { 
-    name: 'Combat', 
-    count: '3',
-    tooltip: 'Boxing, Kickboxing, MMA Conditioning'
-  },
-  { 
-    name: 'Recovery', 
-    count: '2',
-    tooltip: 'Mobility & Recovery, Deep Stretch'
-  }
-]
-
-const FEATURED_CATEGORIES = [
-  {
-    title: 'High Intensity',
-    description: 'Push your limits with dynamic, full-body workouts',
-    image: 'https://images.unsplash.com/photo-1534258936925-c58bed479fcb',
-    stats: [
-      { label: 'Calories', value: '800+' },
-      { label: 'Duration', value: '45-60m' }
-    ]
-  },
-  {
-    title: 'Strength & Power',
-    description: 'Build muscle and increase strength with expert guidance',
-    image: 'https://images.unsplash.com/photo-1576678927484-cc907957088c',
-    stats: [
-      { label: 'Focus Areas', value: '5+' },
-      { label: 'Duration', value: '60m' }
-    ]
-  },
-  {
-    title: 'Mind & Body',
-    description: 'Find balance through movement and mindfulness',
-    image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b',
-    stats: [
-      { label: 'Intensity', value: 'Low' },
-      { label: 'Duration', value: '50m' }
-    ]
-  }
-]
-
 const Classes: React.FC = () => {
   const [selectedClass, setSelectedClass] = useState<ClassType | null>(null)
   const [hoveredClass, setHoveredClass] = useState<string | null>(null)
@@ -173,6 +110,14 @@ const Classes: React.FC = () => {
     threshold: 0.1,
     triggerOnce: true
   })
+
+  // Add parallax scroll effect for hero section
+  const [scrollY, setScrollY] = useState(0);
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     if (inView) {
@@ -188,58 +133,40 @@ const Classes: React.FC = () => {
     setSelectedClass(classInfo);
   }, []);
 
-  const renderCategoryButton = useCallback((category: any, index: number) => (
-    <motion.button
-      key={category.name}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="group relative px-8 py-3"
-      title={category.tooltip}
-    >
-      <div className="absolute inset-0 bg-white/5 rounded-lg group-hover:bg-gradient-to-r from-orangePulse to-yellow-500 transition-all duration-300"></div>
-      
-      <div className="relative flex items-center gap-3">
-        <span className="font-athletic text-lg text-white group-hover:text-white transition-colors">
-          {category.name}
-        </span>
-        <span className="text-sm text-greyPulse group-hover:text-white/80 transition-colors">
-          ({category.count})
-        </span>
-      </div>
-    </motion.button>
-  ), []);
-
   const renderClassCard = useCallback((classType: ClassType, index: number) => (
     <motion.div
       key={classType.name}
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
+      transition={{ 
+        duration: 0.8,
+        delay: index * 0.1,
+        ease: [0.25, 0.1, 0, 1]
+      }}
       viewport={{ once: true }}
-      onHoverStart={() => handleClassHover(classType.name)}
-      onHoverEnd={() => handleClassHover(null)}
-      onClick={() => handleClassSelect(classType)}
-      className="group relative aspect-[3/4] rounded-lg overflow-hidden cursor-pointer"
+      whileHover={{ y: -10 }}
+      className="group relative aspect-[3/4] rounded-xl overflow-hidden cursor-pointer"
     >
-      <div className="absolute inset-0">
-        <img 
-          loading="lazy"
-          decoding="async"
-          src={classType.image} 
-          alt={classType.name}
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-300" />
-      </div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-80 
+                    group-hover:opacity-90 transition-all duration-500" />
+      
+      <motion.img 
+        src={classType.image}
+        alt={classType.name}
+        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+      />
 
-      <div className="absolute inset-0 p-6 flex flex-col justify-end transform transition-transform duration-500 group-hover:translate-y-[-10px]">
+      <div className="absolute inset-0 p-6 flex flex-col justify-end">
+        <h3 className="text-3xl font-display mb-2 transform group-hover:translate-y-[-10px] transition-transform duration-500">
+          {classType.name}
+        </h3>
+        
         <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.3, delay: 0.2 }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="transform group-hover:translate-y-[-10px] transition-transform duration-500"
         >
-          <h3 className="text-3xl font-display mb-2">{classType.name}</h3>
           <div className="flex items-center space-x-4 mb-4">
             <span className="text-sm font-athletic text-greyPulse">{classType.duration}</span>
             <span className="w-1 h-1 bg-orangePulse rounded-full" />
@@ -263,32 +190,142 @@ const Classes: React.FC = () => {
     <>
       <Navbar />
       <main className="bg-blackPulse text-white min-h-screen">
-        <section className="relative h-[60vh] overflow-hidden">
+        <section className="relative h-[100vh] overflow-hidden">
+          {/* Dynamic Background with multiple layers */}
           <motion.div 
             className="absolute inset-0"
             style={{
               backgroundImage: `url('https://images.unsplash.com/photo-1534258936925-c58bed479fcb')`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
-              transform: hoveredClass ? 'scale(1.1)' : 'scale(1)',
-              transition: 'transform 0.8s'
+              y: scrollY * 0.5,
+              scale: 1 + (scrollY * 0.0005),
             }}
           >
-            <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/90" />
+            {/* Overlay gradients */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black via-black/40 to-transparent opacity-75" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black opacity-50" />
+            
+            {/* Animated grain texture */}
+            <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay" />
           </motion.div>
-          
+
+          {/* Content Section */}
           <div className="relative h-full max-w-7xl mx-auto px-4 flex flex-col justify-center">
-            <motion.h1 
-              className="text-8xl font-display"
-              initial={{ opacity: 0, y: 30 }}
+            <motion.div
+              initial={{ opacity: 0, y: 100 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 1.2, ease: [0.25, 0.1, 0, 1] }}
+              className="max-w-4xl"
             >
-              OUR CLASSES
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-orangePulse to-yellow-500">
-                FIND YOUR FIT
-              </span>
-            </motion.h1>
+              <h1 className="text-[12vw] lg:text-[12rem] font-display leading-[0.8] tracking-tighter">
+                OUR
+                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-orangePulse via-red-500 to-yellow-500 animate-gradient-x">
+                  CLASSES
+                </span>
+              </h1>
+            </motion.div>
+
+            {/* Animated decorative elements */}
+            <motion.div
+              initial={{ opacity: 0, x: -100 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1, delay: 0.5 }}
+              className="absolute left-4 top-1/3 hidden lg:block"
+            >
+              <div className="w-[1px] h-[200px] bg-gradient-to-b from-transparent via-orangePulse to-transparent" />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1, delay: 0.8 }}
+              className="absolute right-8 bottom-1/4 hidden lg:block"
+            >
+              <div className="text-[200px] font-display leading-none opacity-5 text-white">X</div>
+            </motion.div>
+          </div>
+
+          {/* Enhanced geometric decorations */}
+          <div className="absolute bottom-0 left-0 right-0">
+            <div className="relative h-[25vh]">
+              {/* Main diagonal slice */}
+              <motion.div 
+                initial={{ opacity: 0, y: 100 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: 0.5 }}
+                className="absolute bottom-0 left-0 right-0 h-full"
+              >
+                {/* Primary diagonal */}
+                <div className="absolute inset-0 bg-gradient-to-r from-orangePulse to-yellow-500 transform -skew-y-[12deg] origin-bottom-right"></div>
+                
+                {/* Texture overlay */}
+                <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20 mix-blend-overlay transform -skew-y-[12deg] origin-bottom-right"></div>
+                
+                {/* Additional decorative lines */}
+                <div className="absolute bottom-[20%] left-0 right-0 h-[1px] bg-white/10 transform -skew-y-[12deg]"></div>
+                <div className="absolute bottom-[40%] left-0 right-0 h-[1px] bg-white/10 transform -skew-y-[12deg]"></div>
+                
+                {/* Accent line */}
+                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white/20 transform -skew-y-[12deg]"></div>
+              </motion.div>
+
+              {/* Secondary diagonal overlay */}
+              <motion.div
+                initial={{ opacity: 0, x: -100 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1, delay: 0.7 }}
+                className="absolute bottom-0 left-0 right-0 h-[70%] overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-blackPulse transform -skew-y-[14deg] origin-bottom-left translate-y-[50%] opacity-50"></div>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
+        <section className="relative py-32 bg-gradient-to-r from-orangePulse to-yellow-500">
+          <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent"></div>
+          
+          <div className="relative max-w-7xl mx-auto px-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+              <div>
+                <h2 className="text-7xl font-display text-white mb-6 leading-none">
+                  TRANSFORM YOUR
+                  <span className="block text-blackPulse">POTENTIAL</span>
+                </h2>
+                <p className="font-athletic text-xl text-white/90 mb-8 leading-relaxed">
+                  Our diverse range of classes combines cutting-edge training methodologies 
+                  with expert instruction, designed to push your limits and achieve 
+                  extraordinary results.
+                </p>
+                <div className="flex flex-wrap gap-6">
+                  <div className="bg-black/20 backdrop-blur-sm p-6 rounded-lg">
+                    <p className="text-4xl font-display text-white mb-2">8+</p>
+                    <p className="text-sm font-athletic text-white/70">Class Categories</p>
+                  </div>
+                  <div className="bg-black/20 backdrop-blur-sm p-6 rounded-lg">
+                    <p className="text-4xl font-display text-white mb-2">45-75</p>
+                    <p className="text-sm font-athletic text-white/70">Minutes Per Class</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="relative">
+                <div className="aspect-square rounded-2xl overflow-hidden">
+                  <img 
+                    src="https://images.unsplash.com/photo-1549060279-7e168fcee0c2?q=80&w=1200" 
+                    alt="Fitness Class"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                </div>
+                <div className="absolute -bottom-8 -left-8 bg-blackPulse p-6 rounded-lg shadow-xl">
+                  <p className="text-sm font-athletic text-greyPulse mb-2">Next Class Starting</p>
+                  <p className="text-3xl font-display text-white">10:30 AM</p>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -296,68 +333,6 @@ const Classes: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/50 to-black/0 opacity-40"></div>
           
           <div className="max-w-7xl mx-auto px-4">
-            <div className="flex flex-wrap justify-center gap-6 mb-20">
-              {CATEGORY_DATA.map(renderCategoryButton)}
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {FEATURED_CATEGORIES.map((category, index) => (
-                <motion.div
-                  key={category.title}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.6, delay: index * 0.2 }}
-                  className="group relative aspect-[4/3] rounded-xl overflow-hidden"
-                >
-                  <div className="absolute inset-0">
-                    <img 
-                      src={category.image} 
-                      alt={category.title}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-80"></div>
-                  </div>
-
-                  <div className="relative h-full p-8 flex flex-col justify-end">
-                    <div className="transform transition-transform duration-500 group-hover:translate-y-[-10px]">
-                      <h3 className="text-3xl font-display text-white mb-2">
-                        {category.title}
-                      </h3>
-                      <p className="text-sm text-greyPulse mb-4 line-clamp-2">
-                        {category.description}
-                      </p>
-                      
-                      <div className="flex gap-4 mb-6">
-                        {category.stats.map((stat, i) => (
-                          <div key={i} className="bg-white/10 backdrop-blur-sm px-4 py-2 rounded">
-                            <p className="text-xs text-greyPulse">{stat.label}</p>
-                            <p className="text-lg font-athletic text-white">{stat.value}</p>
-                          </div>
-                        ))}
-                      </div>
-
-                      <Link
-                        to={`/classes/${category.title.toLowerCase().replace(/ & /g, '-')}`}
-                        className="inline-flex items-center gap-2 text-white group/link"
-                      >
-                        <span className="font-athletic text-sm uppercase tracking-wider group-hover/link:text-orangePulse transition-colors">
-                          Explore Classes
-                        </span>
-                        <svg 
-                          className="w-4 h-4 text-orangePulse transform transition-transform group-hover/link:translate-x-1"
-                          fill="none" 
-                          viewBox="0 0 24 24" 
-                          stroke="currentColor"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                        </svg>
-                      </Link>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-20">
               {[
                 { label: 'Weekly Classes', value: '120+' },

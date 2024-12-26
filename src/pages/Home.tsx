@@ -181,7 +181,7 @@ const Home: React.FC = () => {
 
         {/* CTA Section */}
         <section className="py-24 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-orangePulse to-yellow-500 opacity-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-orangePulse to-red-500 opacity-50"></div>
           <div className="relative max-w-7xl mx-auto px-4 text-center">
             <h2 className="text-6xl font-display uppercase mb-8">Start Your Journey Today</h2>
             <p className="font-athletic text-2xl text-greyPulse mb-12 max-w-3xl mx-auto">

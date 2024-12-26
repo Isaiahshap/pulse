@@ -111,13 +111,23 @@ const Classes: React.FC = () => {
     triggerOnce: true
   })
 
-  // Add parallax scroll effect for hero section
-  const [scrollY, setScrollY] = useState(0);
+  // Add new animation controls
+  const heroControls = useAnimation()
+  const [heroRef, heroInView] = useInView({
+    threshold: 0.1,
+    triggerOnce: true
+  })
+
+  // Enhanced parallax effect
   useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    const handleScroll = () => {
+      setScrollY(window.scrollY)
+      const opacity = Math.max(0, Math.min(1, 1 - window.scrollY / 1000))
+      heroControls.start({ opacity })
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [heroControls])
 
   useEffect(() => {
     if (inView) {
@@ -174,7 +184,7 @@ const Classes: React.FC = () => {
           </div>
           
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 rounded-full bg-orangePulse/20 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-full bg-orangePulse/90 flex items-center justify-center">
               <svg className="w-4 h-4 text-orangePulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
@@ -190,6 +200,7 @@ const Classes: React.FC = () => {
     <>
       <Navbar />
       <main className="bg-blackPulse text-white min-h-screen">
+        {/* Enhanced Hero Section */}
         <section className="relative h-[100vh] overflow-hidden">
           {/* Dynamic Background with multiple layers */}
           <motion.div 
@@ -202,7 +213,7 @@ const Classes: React.FC = () => {
               scale: 1 + (scrollY * 0.0005),
             }}
           >
-            {/* Overlay gradients */}
+            {/* Enhanced overlay gradients */}
             <div className="absolute inset-0 bg-gradient-to-b from-black via-black/40 to-transparent opacity-75" />
             <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black opacity-50" />
             
@@ -210,7 +221,7 @@ const Classes: React.FC = () => {
             <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay" />
           </motion.div>
 
-          {/* Content Section */}
+          {/* Enhanced Content Section */}
           <div className="relative h-full max-w-7xl mx-auto px-4 flex flex-col justify-center">
             <motion.div
               initial={{ opacity: 0, y: 100 }}
@@ -226,7 +237,7 @@ const Classes: React.FC = () => {
               </h1>
             </motion.div>
 
-            {/* Animated decorative elements */}
+            {/* New decorative elements */}
             <motion.div
               initial={{ opacity: 0, x: -100 }}
               animate={{ opacity: 1, x: 0 }}
@@ -256,28 +267,11 @@ const Classes: React.FC = () => {
                 transition={{ duration: 1, delay: 0.5 }}
                 className="absolute bottom-0 left-0 right-0 h-full"
               >
-                {/* Primary diagonal */}
-                <div className="absolute inset-0 bg-gradient-to-r from-orangePulse to-yellow-500 transform -skew-y-[12deg] origin-bottom-right"></div>
-                
-                {/* Texture overlay */}
+                <div className="absolute inset-0 bg-gradient-to-r from-orangePulse to-red-500 transform -skew-y-[12deg] origin-bottom-right"></div>
                 <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20 mix-blend-overlay transform -skew-y-[12deg] origin-bottom-right"></div>
-                
-                {/* Additional decorative lines */}
                 <div className="absolute bottom-[20%] left-0 right-0 h-[1px] bg-white/10 transform -skew-y-[12deg]"></div>
                 <div className="absolute bottom-[40%] left-0 right-0 h-[1px] bg-white/10 transform -skew-y-[12deg]"></div>
-                
-                {/* Accent line */}
                 <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white/20 transform -skew-y-[12deg]"></div>
-              </motion.div>
-
-              {/* Secondary diagonal overlay */}
-              <motion.div
-                initial={{ opacity: 0, x: -100 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1, delay: 0.7 }}
-                className="absolute bottom-0 left-0 right-0 h-[70%] overflow-hidden"
-              >
-                <div className="absolute inset-0 bg-blackPulse transform -skew-y-[14deg] origin-bottom-left translate-y-[50%] opacity-50"></div>
               </motion.div>
             </div>
           </div>
@@ -329,157 +323,105 @@ const Classes: React.FC = () => {
           </div>
         </section>
 
-        <section className="py-24 relative contain-content">
-          <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/50 to-black/0 opacity-40"></div>
-          
-          <div className="max-w-7xl mx-auto px-4">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-20">
-              {[
-                { label: 'Weekly Classes', value: '120+' },
-                { label: 'Expert Trainers', value: '15' },
-                { label: 'Class Types', value: '24' },
-                { label: 'Member Rating', value: '4.9' }
-              ].map((stat, index) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="text-center"
-                >
-                  <p className="text-4xl font-display text-white mb-2">
-                    {stat.value}
-                  </p>
-                  <p className="font-athletic text-sm text-greyPulse uppercase tracking-wider">
-                    {stat.label}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="relative py-32 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-orangePulse to-yellow-500 opacity-5"></div>
-          <div className="max-w-7xl mx-auto px-4">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-              <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8 }}
-              >
-                <h2 className="text-6xl font-display mb-6">
-                  Elite Training
-                  <span className="block text-transparent bg-clip-text bg-gradient-to-r from-orangePulse to-yellow-500">
-                    Experience
-                  </span>
-                </h2>
-                <p className="font-athletic text-xl text-greyPulse mb-8 leading-relaxed">
-                  Our signature programs combine cutting-edge training methodologies with personalized coaching, 
-                  ensuring maximum results for every member.
-                </p>
-                <div className="grid grid-cols-2 gap-6 mb-8">
-                  {[
-                    { label: 'Class Duration', value: '75 min' },
-                    { label: 'Max Participants', value: '8' },
-                    { label: 'Experience Level', value: 'Advanced' },
-                    { label: 'Calories Burn', value: '800-1000' }
-                  ].map((stat) => (
-                    <div key={stat.label} className="bg-white/5 p-4 rounded-lg backdrop-blur-sm">
-                      <p className="text-sm text-greyPulse mb-1">{stat.label}</p>
-                      <p className="text-2xl font-display text-white">{stat.value}</p>
-                    </div>
-                  ))}
-                </div>
-                <Link
-                  to="/membership"
-                  className="inline-flex items-center gap-3 group"
-                >
-                  <span className="text-xl font-athletic text-white group-hover:text-orangePulse transition-colors">
-                    Join Elite Program
-                  </span>
-                  <svg 
-                    className="w-6 h-6 text-orangePulse transform group-hover:translate-x-2 transition-transform"
-                    fill="none" 
-                    viewBox="0 0 24 24" 
-                    stroke="currentColor"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </Link>
-              </motion.div>
-              
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8 }}
-                className="relative aspect-[4/3] rounded-2xl overflow-hidden"
-              >
-                <img 
-                  src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48"
-                  alt="Elite Training"
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-                
-                <div className="absolute bottom-8 left-8 right-8 flex justify-between">
-                  <div className="bg-black/60 backdrop-blur-md p-4 rounded-lg">
-                    <p className="text-sm text-greyPulse">Weekly Sessions</p>
-                    <p className="text-2xl font-display text-white">3x</p>
-                  </div>
-                  <div className="bg-black/60 backdrop-blur-md p-4 rounded-lg">
-                    <p className="text-sm text-greyPulse">Success Rate</p>
-                    <p className="text-2xl font-display text-white">94%</p>
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-          </div>
-        </section>
-
         <section className="max-w-7xl mx-auto px-4 py-24">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="mb-16 text-center"
+          >
+            <h2 className="text-[8vw] lg:text-8xl font-display leading-none mb-6">
+              FIND YOUR
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-orangePulse to-yellow-500">
+                PERFECT CLASS
+              </span>
+            </h2>
+          </motion.div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {CLASS_TYPES.map((classType, index) => renderClassCard(classType, index))}
+            {CLASS_TYPES.map((classType, index) => (
+              <motion.div
+                key={classType.name}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ 
+                  duration: 0.8,
+                  delay: index * 0.1,
+                  ease: [0.25, 0.1, 0, 1]
+                }}
+                viewport={{ once: true }}
+                whileHover={{ y: -10 }}
+                className="group relative aspect-[3/4] rounded-xl overflow-hidden cursor-pointer"
+                onClick={() => handleClassSelect(classType)}
+              >
+                <motion.img 
+                  src={classType.image}
+                  alt={classType.name}
+                  className="absolute inset-0 w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                />
+
+                {/* Stronger, more visible gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black from-40% via-black/50 via-75% to-transparent" />
+                
+                <div className="absolute inset-0 p-6 flex flex-col justify-end">
+                  <h3 className="text-3xl font-display mb-3 transform group-hover:translate-y-[-10px] transition-transform duration-500
+                               text-white drop-shadow-lg">
+                    {classType.name}
+                  </h3>
+                  
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    className="transform group-hover:translate-y-[-10px] transition-transform duration-500"
+                  >
+                    <p className="text-white/90 mb-4 font-athletic text-sm leading-relaxed">
+                      {classType.description}
+                    </p>
+                    
+                    <div className="flex items-center space-x-4 mb-4">
+                      <span className="text-sm font-athletic text-white/90">{classType.duration}</span>
+                      <span className="w-1 h-1 bg-orangePulse rounded-full" />
+                      <span className="text-sm font-athletic text-white/90">{classType.level}</span>
+                    </div>
+                    
+                    <div className="flex items-center space-x-3">
+                      <div className="w-8 h-8 rounded-full bg-orangePulse/20 flex items-center justify-center">
+                        <svg className="w-4 h-4 text-orangePulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                      </div>
+                      <span className="text-sm font-athletic text-white">{classType.trainer}</span>
+                    </div>
+                  </motion.div>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </section>
 
-        <section className="py-24 bg-gradient-to-b from-transparent to-black/20">
-          <div className="max-w-7xl mx-auto px-4">
-            <div className="text-center mb-16">
-              <h2 className="text-6xl font-display mb-4">Today's Schedule</h2>
-              <p className="font-athletic text-xl text-greyPulse">Reserve your spot in our premium fitness experiences</p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[
-                { time: '06:00 AM', class: 'HIIT Training', spots: '4 spots left', trainer: 'Sarah Johnson' },
-                { time: '08:30 AM', class: 'Power Yoga', spots: '6 spots left', trainer: 'Emma Davis' },
-                { time: '12:00 PM', class: 'Strength & Power', spots: '3 spots left', trainer: 'Mike Thompson' },
-              ].map((session, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
-                  className="bg-white/5 backdrop-blur-sm rounded-lg p-6 transform transition-all duration-300
-                             hover:bg-white/10 hover:shadow-lg hover:shadow-black/20"
-                >
-                  <div className="flex justify-between items-start mb-4">
-                    <p className="text-2xl font-display text-white">{session.time}</p>
-                    <span className="px-3 py-1 bg-orangePulse/20 text-orangePulse text-sm rounded-full">
-                      {session.spots}
-                    </span>
-                  </div>
-                  <h3 className="text-xl font-athletic mb-2">{session.class}</h3>
-                  <p className="text-sm text-greyPulse mb-4">with {session.trainer}</p>
-                  <button className="w-full py-2 border border-orangePulse/30 text-white font-athletic 
-                                   hover:bg-gradient-to-r from-orangePulse to-yellow-500 hover:border-transparent
-                                   transition-all duration-300">
-                    Book Now
-                  </button>
-                </motion.div>
-              ))}
-            </div>
+        {/* Final CTA section */}
+        <section className="relative py-32 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-orangePulse to-red-500"></div>
+          <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20 mix-blend-overlay"></div>
+          
+          <div className="relative max-w-7xl mx-auto px-4 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <h2 className="text-6xl lg:text-8xl font-display text-white mb-8">
+                READY TO START?
+              </h2>
+              <Link
+                to="/membership"
+                className="inline-block px-12 py-6 bg-blackPulse text-white text-xl font-athletic 
+                         hover:bg-white hover:text-blackPulse transition-all duration-300"
+              >
+                JOIN NOW
+              </Link>
+            </motion.div>
           </div>
         </section>
       </main>

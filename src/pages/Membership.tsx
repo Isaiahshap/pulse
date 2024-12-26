@@ -43,8 +43,6 @@ const FAQ_DATA = [
   }
 ] as const
 
-const calculateYearlyPrice = (monthlyPrice: number): number => 
-  Math.floor(monthlyPrice * 12 * 0.8) // 20% discount
 
 const formatPrice = (price: number): string => 
   price.toLocaleString('en-US')

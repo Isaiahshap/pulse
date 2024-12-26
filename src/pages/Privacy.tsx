@@ -2,7 +2,6 @@ import React from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
 
 const TermsOfService: React.FC = () => {
   return (

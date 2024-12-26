@@ -76,19 +76,35 @@ const Home: React.FC = () => {
       {/* Welcome Section (Existing) */}
       <main className="bg-blackPulse text-white">
         <section className="max-w-7xl mx-auto px-4 py-16">
-          <h2 className="text-6xl font-display text-orangePulse mb-8">
-            Welcome to Pulse
-          </h2>
-          <p className="font-athletic text-2xl text-greyPulse leading-relaxed mb-4 tracking-wide">
-            Unlock the power of your body and mind in our state-of-the-art facility,
-            where world-class trainers and top-tier equipment meet a vibrant community
-            of fitness enthusiasts.
-          </p>
-          <p className="font-athletic text-2xl text-greyPulse leading-relaxed tracking-wide">
-            Whether you're a seasoned athlete or a complete beginner, our 
-            classes cater to all fitness levels, ensuring that everyone has 
-            the opportunity to discover their true potential.
-          </p>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
+            <h2 className="text-7xl md:text-8xl font-display text-transparent bg-clip-text bg-gradient-to-r from-orangePulse via-red-500 to-yellow-500 animate-gradient-x mb-8">
+              ELEVATE YOUR GAME
+            </h2>
+            <div className="space-y-4">
+              <motion.p 
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.4, delay: 0.2 }}
+                className="font-athletic text-3xl text-greyPulse leading-tight tracking-wide"
+              >
+                UNLEASH YOUR POTENTIAL IN OUR
+                <span className="text-orangePulse"> CUTTING-EDGE </span>
+                FACILITY
+              </motion.p>
+              <motion.p 
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.4, delay: 0.3 }}
+                className="font-athletic text-2xl text-greyPulse leading-tight tracking-wide"
+              >
+                WHERE CHAMPIONS ARE MADE 24/7
+              </motion.p>
+            </div>
+          </motion.div>
         </section>
 
         {/* Features Grid */}
@@ -100,12 +116,25 @@ const Home: React.FC = () => {
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                  whileHover={{ 
+                    scale: 1.05,
+                    transition: { duration: 0.2 }
+                  }}
                   viewport={{ once: true }}
-                  className="bg-black/30 p-8 rounded-lg hover:bg-black/50 transition-all duration-300"
+                  className="bg-black/30 p-8 rounded-lg border border-white/5 hover:border-orangePulse/30 transition-all duration-300"
                 >
-                  <div className="text-orangePulse mb-4">{feature.icon}</div>
-                  <h3 className="text-2xl font-display text-orangePulse mb-3">{feature.title}</h3>
+                  <motion.div 
+                    className="text-orangePulse mb-4"
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {feature.icon}
+                  </motion.div>
+                  <h3 className="text-3xl font-display text-white mb-3">
+                    {feature.title}
+                    <span className="text-orangePulse">.</span>
+                  </h3>
                   <p className="font-athletic text-lg text-greyPulse">{feature.description}</p>
                 </motion.div>
               ))}
@@ -122,7 +151,20 @@ const Home: React.FC = () => {
               <p className="font-athletic text-2xl text-greyPulse">Experience the intensity of our signature workouts</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {['HIIT Fusion', 'Power Lifting', 'Boxing'].map((className, index) => (
+              {[
+                {
+                  name: 'HIIT Fusion',
+                  image: 'https://images.unsplash.com/photo-1601422407692-ec4eeec1d9b3?q=80&w=1200',
+                },
+                {
+                  name: 'Power Lifting',
+                  image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?q=80&w=1200',
+                },
+                {
+                  name: 'Boxing',
+                  image: 'https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?q=80&w=1200',
+                }
+              ].map((classItem, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, scale: 0.9 }}
@@ -130,10 +172,15 @@ const Home: React.FC = () => {
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   viewport={{ once: true }}
                   className="group relative aspect-[3/4] overflow-hidden rounded-lg cursor-pointer"
+                  style={{
+                    backgroundImage: `url('${classItem.image}')`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center'
+                  }}
                 >
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-300"></div>
                   <div className="absolute bottom-0 left-0 p-6">
-                    <h3 className="text-3xl font-display text-white mb-2">{className}</h3>
+                    <h3 className="text-3xl font-display text-white mb-2">{classItem.name}</h3>
                     <Link
                       to="/classes"
                       className="inline-block bg-orangePulse text-white px-6 py-2 font-athletic uppercase tracking-wider hover:bg-white hover:text-orangePulse transition-all duration-300"
@@ -183,25 +230,53 @@ const Home: React.FC = () => {
         <section className="py-24 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-orangePulse to-red-500 opacity-50"></div>
           <div className="relative max-w-7xl mx-auto px-4 text-center">
-            <h2 className="text-6xl font-display uppercase mb-8">Start Your Journey Today</h2>
-            <p className="font-athletic text-2xl text-greyPulse mb-12 max-w-3xl mx-auto">
-              Join Pulse and transform your life with our world-class facilities,
-              expert trainers, and supportive community.
-            </p>
-            <div className="flex flex-wrap justify-center gap-6">
-              <Link
-                to="/membership"
-                className="bg-gradient-to-r from-orangePulse to-yellow-500 text-white px-12 py-4 text-xl font-athletic uppercase tracking-wider hover:from-white hover:to-white hover:text-orangePulse transition-all duration-300"
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <motion.h2 
+                className="text-7xl md:text-9xl font-display uppercase mb-8"
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6 }}
               >
-                Join Now
-              </Link>
-              <Link
-                to="/contact"
-                className="border-2 border-white/30 text-white px-12 py-4 text-xl font-athletic uppercase tracking-wider hover:bg-white/10 transition-all duration-300"
+                <motion.span
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: 0.2 }}
+                >
+                  START
+                </motion.span>{" "}
+                <motion.span
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: 0.3 }}
+                  className="text-transparent bg-clip-text bg-gradient-to-r from-black to-black/80"
+                >
+                  YOUR LEGACY
+                </motion.span>
+              </motion.h2>
+              <motion.div
+                className="flex flex-wrap justify-center gap-6"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.4 }}
               >
-                Contact Us
-              </Link>
-            </div>
+                <Link
+                  to="/membership"
+                  className="bg-black text-white px-12 py-4 text-xl font-athletic uppercase tracking-wider hover:bg-white hover:text-black transition-all duration-300 transform hover:scale-105"
+                >
+                  Join Now
+                </Link>
+                <Link
+                  to="/contact"
+                  className="border-2 border-black text-black px-12 py-4 text-xl font-athletic uppercase tracking-wider hover:bg-black hover:text-white transition-all duration-300 transform hover:scale-105"
+                >
+                  Contact Us
+                </Link>
+              </motion.div>
+            </motion.div>
           </div>
         </section>
       </main>

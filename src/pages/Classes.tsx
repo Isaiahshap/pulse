@@ -118,16 +118,25 @@ const Classes: React.FC = () => {
     triggerOnce: true
   })
 
+  // Add this state at the top of the component
+  const [scrollY, setScrollY] = useState(0)
+
   // Enhanced parallax effect
   useEffect(() => {
+    let ticking = false
     const handleScroll = () => {
-      setScrollY(window.scrollY)
-      const opacity = Math.max(0, Math.min(1, 1 - window.scrollY / 1000))
-      heroControls.start({ opacity })
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrollY(window.scrollY)
+          ticking = false
+        })
+        ticking = true
+      }
     }
-    window.addEventListener('scroll', handleScroll)
+    
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [heroControls])
+  }, [])
 
   useEffect(() => {
     if (inView) {
@@ -196,6 +205,32 @@ const Classes: React.FC = () => {
     </motion.div>
   ), [hoveredClass, handleClassSelect]);
 
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    // Simulate loading of resources
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+    }, 500)
+
+    return () => clearTimeout(timer)
+  }, [])
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-blackPulse flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="text-white text-2xl font-athletic"
+        >
+          Loading...
+        </motion.div>
+      </div>
+    )
+  }
+
   return (
     <>
       <Navbar />
@@ -205,17 +240,28 @@ const Classes: React.FC = () => {
           {/* Dynamic Background with multiple layers */}
           <motion.div 
             className="absolute inset-0"
+            initial={{ scale: 1.1 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 1.5, ease: 'easeOut' }}
             style={{
               backgroundImage: `url('https://images.unsplash.com/photo-1534258936925-c58bed479fcb')`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
-              y: scrollY * 0.5,
-              scale: 1 + (scrollY * 0.0005),
             }}
           >
             {/* Enhanced overlay gradients */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black via-black/40 to-transparent opacity-75" />
-            <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black opacity-50" />
+            <motion.div 
+              className="absolute inset-0 bg-gradient-to-b from-black via-black/40 to-transparent"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.75 }}
+              transition={{ duration: 0.8 }}
+            />
+            <motion.div 
+              className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.5 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            />
             
             {/* Animated grain texture */}
             <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay" />
@@ -229,12 +275,22 @@ const Classes: React.FC = () => {
               transition={{ duration: 1.2, ease: [0.25, 0.1, 0, 1] }}
               className="max-w-4xl"
             >
-              <h1 className="text-[12vw] lg:text-[12rem] font-display leading-[0.8] tracking-tighter">
+              <motion.h1 
+                className="text-[12vw] lg:text-[12rem] font-display leading-[0.8] tracking-tighter"
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+              >
                 OUR
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-orangePulse via-red-500 to-yellow-500 animate-gradient-x">
+                <motion.span 
+                  className="block text-transparent bg-clip-text bg-gradient-to-r from-orangePulse via-red-500 to-yellow-500 animate-gradient-x"
+                  initial={{ opacity: 0, x: -30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 0.5 }}
+                >
                   CLASSES
-                </span>
-              </h1>
+                </motion.span>
+              </motion.h1>
             </motion.div>
 
             {/* New decorative elements */}

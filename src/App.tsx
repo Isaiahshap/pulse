@@ -10,6 +10,8 @@ const Trainers = React.lazy(() => import('./pages/Trainers'))
 const Contact = React.lazy(() => import('./pages/Contact'))
 const Membership = React.lazy(() => import('./pages/Membership'))
 const Schedule = React.lazy(() => import('./pages/Schedule'))
+const Privacy = React.lazy(() => import('./pages/Privacy'))
+const Terms = React.lazy(() => import('./pages/Terms'))
 
 const LoadingFallback = () => (
   <div className="min-h-screen bg-blackPulse flex items-center justify-center">
@@ -30,6 +32,8 @@ const App: React.FC = () => {
             <Route path="/contact" element={<Contact />} />
             <Route path="/membership" element={<Membership />} />
             <Route path="/schedule" element={<Schedule />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
           </Routes>
         </div>
       </Suspense>

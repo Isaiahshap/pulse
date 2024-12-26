@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 
 const Hero: React.FC = () => {
-  const [activeVideo, setActiveVideo] = useState(1)
+  const [, setActiveVideo] = useState(1)
 
   useEffect(() => {
     // Function to handle video end and switch to the next video
